@@ -1,55 +1,23 @@
-export function parseLrc(lrcText: string): {
-    meta: {
-        [key: string]: string;
-    },
-    lines: {
-        time: number;
-        text: string;
-    }[]
-} {
-    const lrc = {
-        meta: {}, // 存储头部信息（如标题、歌手）
-        lines: [] // 存储歌词行 { time: 毫秒, text: 歌词 }
-    };
+import dayjs from "dayjs";
+import type { resultType } from ".";
 
-    // 按行分割歌词文本（兼容 Windows 和 Unix 换行符）
-    const lines = lrcText.split(/\r?\n/);
+export function jsonToLrc(json: resultType[]): string {
+    return json.map(item => `[${dayjs(item.time * 1000).format('mm:ss.SSS').substring(0, 8)}]${item.text}`).join('\n')
+}
 
-    // 正则表达式：匹配时间标签 [mm:ss.ms]
-    const timeRegex = /\[(\d{2}):(\d{2})\.(\d{2,3})\]/g;
-    // 正则表达式：匹配头部信息 [key:value]
-    const metaRegex = /^\[(\w+):(.+)\]$/;
 
-    lines.forEach(line => {
-        // 跳过空行
-        if (!line.trim()) return;
+/**获取半径为n的元素内容 */
+export function getRangeWithRadius<T>(arr: T[], i: number, n: number): (T | null)[] {
+    // 计算起始索引（i - n）和结束索引（i + n）
+    const start = i - n;
+    const end = i + n;
 
-        // 解析头部信息（如 [ti:xxx]）
-        const metaMatch = line.match(metaRegex);
-        if (metaMatch) {
-            const [, key, value] = metaMatch;
-            lrc.meta[key] = value.trim();
-            return;
-        }
-
-        // 提取当前行的所有时间标签
-        const timeMatches = [...line.matchAll(timeRegex)];
-        if (!timeMatches.length) return;
-
-        // 提取歌词内容（去掉所有时间标签后的部分）
-        const text = line.replace(timeRegex, '').trim();
-
-        // 解析每个时间标签为毫秒，并添加到歌词行
-        timeMatches.forEach(match => {
-            const [, mm, ss, ms] = match;
-            // 转换为毫秒（mm*60*1000 + ss*1000 + ms，注意ms可能是2位或3位）
-            const time = Number(mm) * 60 * 1000 + Number(ss) * 1000 + Number(ms);
-            lrc.lines.push({ time, text });
-        });
+    // 生成从 start 到 end 的索引数组，并映射对应值（越界则为 null）
+    return Array.from({ length: end - start + 1 }, (_, index) => {
+        const currentIndex = start + index;
+        // 检查索引是否在数组有效范围内
+        return currentIndex >= 0 && currentIndex < arr.length
+            ? arr[currentIndex]
+            : null;
     });
-
-    // 按时间升序排序歌词行
-    lrc.lines.sort((a, b) => a.time - b.time);
-
-    return lrc;
 }

@@ -79,7 +79,7 @@ const Navbar1 = ({
   ],
 }: Navbar1Props) => {
   return (
-    <section className="py-4 flex items-center justify-center fixed top-0 left-0 right-0 z-9178">
+    <section className="py-2 flex items-center justify-center fixed top-0 left-0 right-0 z-9178 bg-white shadow">
       <div className="container">
         {/* Desktop Menu */}
         <nav className="hidden items-center justify-between md:flex">
@@ -162,7 +162,7 @@ const renderMenuItem = (item: MenuItem) => {
     return (
       <NavigationMenuItem key={item.title}>
         <NavigationMenuTrigger>{item.title}</NavigationMenuTrigger>
-        <NavigationMenuContent className="bg-popover text-popover-foreground">
+        <NavigationMenuContent className="text-popover-foreground">
           {item.items.map((subItem) => (
             <NavigationMenuLink asChild key={subItem.title} className="w-80">
               <SubMenuLink item={subItem} />
@@ -178,7 +178,7 @@ const renderMenuItem = (item: MenuItem) => {
       <Link
         to={item.url}
         target={item.url.startsWith('https') ? '_blank' : '_self'}
-        className="bg-background hover:bg-muted hover:text-accent-foreground group inline-flex h-10 w-max items-center justify-center rounded-md px-4 py-2 text-sm font-medium transition-colors"
+        className="hover:text-accent-foreground group inline-flex h-10 w-max items-center justify-center rounded-md px-4 py-2 text-sm font-medium transition-colors"
       >
         {item.title}
       </Link>
@@ -212,7 +212,7 @@ const renderMobileMenuItem = (item: MenuItem) => {
 const SubMenuLink = ({ item }: { item: MenuItem }) => {
   return (
     <Link
-      className="hover:bg-muted hover:text-accent-foreground flex min-w-80 select-none flex-row gap-4 rounded-md p-3 leading-none no-underline outline-none transition-colors"
+      className="hover:text-accent-foreground flex min-w-80 select-none flex-row gap-4 rounded-md p-3 leading-none no-underline outline-none transition-colors"
       to={item.url}
       target={item.url.startsWith('http') ? '_blank' : '_self'}
     >
