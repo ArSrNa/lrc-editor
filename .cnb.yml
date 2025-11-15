@@ -9,7 +9,6 @@ $:
         volumes:
           - /root/.pnpm:cow
           - /root/.pnpm-store:cow
-          - /workspace/.next/cache:cow
       services:
         - vscode
         - docker
